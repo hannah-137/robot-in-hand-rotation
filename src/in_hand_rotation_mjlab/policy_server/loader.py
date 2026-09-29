@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 import torch
-from rsl_rl.runners import OnPolicyRunner
+from mjlab.rl import MjlabOnPolicyRunner
 from tensordict import TensorDict
 
 from mjlab.tasks.registry import load_runner_cls
@@ -106,7 +106,7 @@ def load_inference_policy(
     max_episode_length=max_episode_length,
     device=device,
   )
-  runner_cls = load_runner_cls(task_id) or OnPolicyRunner
+  runner_cls = load_runner_cls(task_id) or MjlabOnPolicyRunner
   runner = runner_cls(loader_env, _prepare_agent_cfg(agent_cfg), device=device)
   try:
     runner.load(str(checkpoint), map_location=device)

@@ -16,9 +16,8 @@ from math import pi
 import mujoco
 
 from in_hand_rotation_mjlab import MYMJLAB_SRC_PATH
-from mjlab.actuator import DelayedActuatorCfg, IdealPdActuatorCfg
+from mjlab.actuator import IdealPdActuatorCfg
 from mjlab.entity import EntityCfg, EntityArticulationInfoCfg
-from mjlab.utils.os import update_assets
 from mjlab.utils.spec_config import CollisionCfg
 
 
@@ -104,6 +103,26 @@ leap_hand_XML: Path = (
     MYMJLAB_SRC_PATH / "robots" / "leap_hand" / "xmls" / "right_hand.xml"
 )
 assert leap_hand_XML.exists(), f"Missing MJCF: {leap_hand_XML}"
+
+
+def update_assets(
+    assets: dict[str, bytes],
+    path: str | Path,
+    meshdir: str | None = None,
+    glob: str = "*",
+    recursive: bool = False,
+) -> None:
+    """Add the files in a folder to an MjSpec assets dict.
+
+    Copied from mjlab v1.1.1 (mjlab.utils.os.update_assets).
+    mjlab v1.6.0 removed this function.
+    """
+    for f in Path(path).glob(glob):
+        if f.is_file():
+            asset_key = f"{meshdir}/{f.name}" if meshdir else f.name
+            assets[asset_key] = f.read_bytes()
+        elif f.is_dir() and recursive:
+            update_assets(assets, f, meshdir, glob, recursive)
 
 
 def get_assets(meshdir: str) -> dict[str, bytes]:
@@ -280,8 +299,8 @@ def _scaled(value: float, scale_map: dict[str, float], joint_name: str) -> float
     return value * scale_map.get(joint_name, 1.0)
 
 
-def _make_joint_actuator_cfg(joint_name: str) -> DelayedActuatorCfg:
-    base_cfg = IdealPdActuatorCfg(
+def _make_joint_actuator_cfg(joint_name: str) -> IdealPdActuatorCfg:
+    return IdealPdActuatorCfg(
         target_names_expr=(joint_name,),
         stiffness=_scaled(
             _base_stiffness_for_joint(joint_name),
@@ -308,10 +327,6 @@ def _make_joint_actuator_cfg(joint_name: str) -> DelayedActuatorCfg:
             LEAP_FRICTION_SCALE_BY_JOINT,
             joint_name,
         ),
-    )
-    return DelayedActuatorCfg(
-        base_cfg=base_cfg,
-        delay_target="position",
         delay_min_lag=LEAP_ACTION_DELAY_MIN_LAG,
         delay_max_lag=LEAP_ACTION_DELAY_MAX_LAG,
         delay_hold_prob=LEAP_ACTION_DELAY_HOLD_PROB,
@@ -395,6 +410,7 @@ LEAP_COLLISION = CollisionCfg(
         "rf_.*": 23,             # 1 | 2 | 4 | 16  (ext + idx + mid + thumb)
         "th_.*": 15,             # 1 | 2 | 4 | 8   (ext + idx + mid + ring)
     },
+    priority=0,
 
     # Fingertips get rich contact, others soft
     condim={

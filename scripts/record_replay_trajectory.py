@@ -10,7 +10,7 @@ from typing import Any
 
 import torch
 import tyro
-from rsl_rl.runners import OnPolicyRunner
+from mjlab.rl import MjlabOnPolicyRunner
 
 from mjlab.envs import ManagerBasedRlEnv
 from mjlab.rl import RslRlVecEnvWrapper
@@ -122,7 +122,7 @@ def main() -> None:
   agent_cfg = load_rl_cfg(chosen_task)
   vec_env = RslRlVecEnvWrapper(env, clip_actions=agent_cfg.clip_actions)
 
-  runner_cls = load_runner_cls(chosen_task) or OnPolicyRunner
+  runner_cls = load_runner_cls(chosen_task) or MjlabOnPolicyRunner
   runner = runner_cls(vec_env, _prepare_agent_cfg(agent_cfg), device=device)
   runner.load(str(Path(args.checkpoint_file).expanduser().resolve()), map_location=device)
   policy = runner.get_inference_policy(device=device)

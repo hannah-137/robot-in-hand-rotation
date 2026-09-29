@@ -53,7 +53,7 @@ class InHandYawCommand(CommandTerm):
     )
     self.target_yaw[env_ids] = wrap_to_pi(current_yaw + delta_yaw)
 
-  def _update_command(self) -> None:
+  def _update_command(self, env_ids: torch.Tensor | None) -> None:
     pass
 
 
@@ -93,7 +93,10 @@ class InHandRotationDirectionCommand(CommandTerm):
     self.prev_yaw[env_ids] = self._cube_yaw()[env_ids]
     self.cumulative_rotation[env_ids] = 0.0
 
-  def _update_command(self) -> None:
+  def _update_command(self, env_ids: torch.Tensor | None) -> None:
+    # mjlab v1.6.0 also calls this on reset. Add rotation only on the step call.
+    if env_ids is not None:
+      return
     current_yaw = self._cube_yaw()
     self.step_delta_yaw = wrap_to_pi(current_yaw - self.prev_yaw)
     self.cumulative_rotation += self.step_delta_yaw
@@ -148,7 +151,7 @@ class HandCubeFrameVizCommand(CommandTerm):
   def _resample_command(self, env_ids: torch.Tensor) -> None:
     del env_ids
 
-  def _update_command(self) -> None:
+  def _update_command(self, env_ids: torch.Tensor | None) -> None:
     pass
 
   def _debug_vis_impl(self, visualizer: "DebugVisualizer") -> None:

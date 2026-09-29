@@ -4,12 +4,12 @@ requires-python = ">=3.10, <3.13"
 resolution-markers = [
     "(python_full_version >= '3.12' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version >= '3.12' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version >= '3.12' and sys_platform != 'darwin' and sys_platform != 'linux')",
     "python_full_version >= '3.12' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
-    "(python_full_version == '3.11.*' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version == '3.11.*' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version == '3.11.*' and sys_platform != 'darwin' and sys_platform != 'linux')",
-    "(python_full_version < '3.11' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version < '3.11' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version < '3.11' and sys_platform != 'darwin' and sys_platform != 'linux')",
-    "python_full_version == '3.11.*' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
-    "python_full_version < '3.11' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
     "python_full_version >= '3.12' and sys_platform == 'darwin'",
+    "(python_full_version == '3.11.*' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version == '3.11.*' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version == '3.11.*' and sys_platform != 'darwin' and sys_platform != 'linux')",
+    "python_full_version == '3.11.*' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
     "python_full_version == '3.11.*' and sys_platform == 'darwin'",
+    "(python_full_version < '3.11' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version < '3.11' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version < '3.11' and sys_platform != 'darwin' and sys_platform != 'linux')",
+    "python_full_version < '3.11' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
     "python_full_version < '3.11' and sys_platform == 'darwin'",
 ]
 
@@ -276,9 +276,9 @@ source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
     "(python_full_version >= '3.12' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version >= '3.12' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version >= '3.12' and sys_platform != 'darwin' and sys_platform != 'linux')",
     "python_full_version >= '3.12' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
+    "python_full_version >= '3.12' and sys_platform == 'darwin'",
     "(python_full_version == '3.11.*' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version == '3.11.*' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version == '3.11.*' and sys_platform != 'darwin' and sys_platform != 'linux')",
     "python_full_version == '3.11.*' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
-    "python_full_version >= '3.12' and sys_platform == 'darwin'",
     "python_full_version == '3.11.*' and sys_platform == 'darwin'",
 ]
 dependencies = [
@@ -428,9 +428,9 @@ source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
     "(python_full_version >= '3.12' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version >= '3.12' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version >= '3.12' and sys_platform != 'darwin' and sys_platform != 'linux')",
     "python_full_version >= '3.12' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
+    "python_full_version >= '3.12' and sys_platform == 'darwin'",
     "(python_full_version == '3.11.*' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version == '3.11.*' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version == '3.11.*' and sys_platform != 'darwin' and sys_platform != 'linux')",
     "python_full_version == '3.11.*' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
-    "python_full_version >= '3.12' and sys_platform == 'darwin'",
     "python_full_version == '3.11.*' and sys_platform == 'darwin'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/26/ce/6e067242fde898841922ac6fc82b0bb2fe35c38e995880bdffdfbe30182a/etils-1.14.0.tar.gz", hash = "sha256:8136e7f4c4173cd0af0ca5481c4475152f0b8686192951eefa60ee8711e1ede4", size = 108127, upload-time = "2026-03-04T17:41:36.291Z" }
@@ -638,6 +638,20 @@ wheels = [
 ]
 
 [[package]]
+name = "imageio-ffmpeg"
+version = "0.6.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/44/bd/c3343c721f2a1b0c9fc71c1aebf1966a3b7f08c2eea8ed5437a2865611d6/imageio_ffmpeg-0.6.0.tar.gz", hash = "sha256:e2556bed8e005564a9f925bb7afa4002d82770d6b08825078b7697ab88ba1755", size = 25210, upload-time = "2025-01-16T21:34:32.747Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/da/58/87ef68ac83f4c7690961bce288fd8e382bc5f1513860fc7f90a9c1c1c6bf/imageio_ffmpeg-0.6.0-py3-none-macosx_10_9_intel.macosx_10_9_x86_64.whl", hash = "sha256:9d2baaf867088508d4a3458e61eeb30e945c4ad8016025545f66c4b5aaef0a61", size = 24932969, upload-time = "2025-01-16T21:34:20.464Z" },
+    { url = "https://files.pythonhosted.org/packages/40/5c/f3d8a657d362cc93b81aab8feda487317da5b5d31c0e1fdfd5e986e55d17/imageio_ffmpeg-0.6.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:b1ae3173414b5fc5f538a726c4e48ea97edc0d2cdc11f103afee655c463fa742", size = 21113891, upload-time = "2025-01-16T21:34:00.277Z" },
+    { url = "https://files.pythonhosted.org/packages/33/e7/1925bfbc563c39c1d2e82501d8372734a5c725e53ac3b31b4c2d081e895b/imageio_ffmpeg-0.6.0-py3-none-manylinux2014_aarch64.whl", hash = "sha256:1d47bebd83d2c5fc770720d211855f208af8a596c82d17730aa51e815cdee6dc", size = 25632706, upload-time = "2025-01-16T21:33:53.475Z" },
+    { url = "https://files.pythonhosted.org/packages/a0/2d/43c8522a2038e9d0e7dbdf3a61195ecc31ca576fb1527a528c877e87d973/imageio_ffmpeg-0.6.0-py3-none-manylinux2014_x86_64.whl", hash = "sha256:c7e46fcec401dd990405049d2e2f475e2b397779df2519b544b8aab515195282", size = 29498237, upload-time = "2025-01-16T21:34:13.726Z" },
+    { url = "https://files.pythonhosted.org/packages/a0/13/59da54728351883c3c1d9fca1710ab8eee82c7beba585df8f25ca925f08f/imageio_ffmpeg-0.6.0-py3-none-win32.whl", hash = "sha256:196faa79366b4a82f95c0f4053191d2013f4714a715780f0ad2a68ff37483cc2", size = 19652251, upload-time = "2025-01-16T21:34:06.812Z" },
+    { url = "https://files.pythonhosted.org/packages/2c/c6/fa760e12a2483469e2bf5058c5faff664acf66cadb4df2ad6205b016a73d/imageio_ffmpeg-0.6.0-py3-none-win_amd64.whl", hash = "sha256:02fa47c83703c37df6bfe4896aab339013f62bf02c5ebf2dce6da56af04ffc0a", size = 31246824, upload-time = "2025-01-16T21:34:28.6Z" },
+]
+
+[[package]]
 name = "importlib-metadata"
 version = "9.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -678,14 +692,14 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "mjlab", git = "https://github.com/mujocolab/mjlab?tag=v1.1.1" },
-    { name = "mujoco", specifier = "==3.5.0" },
-    { name = "mujoco-warp", git = "https://github.com/google-deepmind/mujoco_warp?rev=fc9158989525538db53a2a8c3c0f156cbfeca911" },
+    { name = "mjlab", git = "https://github.com/mujocolab/mjlab?tag=v1.6.0" },
+    { name = "mujoco", specifier = "==3.11.0" },
+    { name = "mujoco-warp", specifier = "==3.11.0" },
     { name = "pyzmq", specifier = ">=25" },
     { name = "scipy" },
     { name = "torch", specifier = "==2.9.0", index = "https://download.pytorch.org/whl/cu126" },
     { name = "torchvision", specifier = "==0.24.0", index = "https://download.pytorch.org/whl/cu126" },
-    { name = "warp-lang", specifier = "==1.12.0.dev20260206", index = "https://pypi.nvidia.com/" },
+    { name = "warp-lang", specifier = "==1.14.0", index = "https://pypi.nvidia.com/" },
 ]
 
 [[package]]
@@ -731,9 +745,9 @@ source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
     "(python_full_version >= '3.12' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version >= '3.12' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version >= '3.12' and sys_platform != 'darwin' and sys_platform != 'linux')",
     "python_full_version >= '3.12' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
+    "python_full_version >= '3.12' and sys_platform == 'darwin'",
     "(python_full_version == '3.11.*' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version == '3.11.*' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version == '3.11.*' and sys_platform != 'darwin' and sys_platform != 'linux')",
     "python_full_version == '3.11.*' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
-    "python_full_version >= '3.12' and sys_platform == 'darwin'",
     "python_full_version == '3.11.*' and sys_platform == 'darwin'",
 ]
 dependencies = [
@@ -975,9 +989,9 @@ source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
     "(python_full_version >= '3.12' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version >= '3.12' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version >= '3.12' and sys_platform != 'darwin' and sys_platform != 'linux')",
     "python_full_version >= '3.12' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
+    "python_full_version >= '3.12' and sys_platform == 'darwin'",
     "(python_full_version == '3.11.*' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version == '3.11.*' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version == '3.11.*' and sys_platform != 'darwin' and sys_platform != 'linux')",
     "python_full_version == '3.11.*' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
-    "python_full_version >= '3.12' and sys_platform == 'darwin'",
     "python_full_version == '3.11.*' and sys_platform == 'darwin'",
 ]
 dependencies = [
@@ -1055,15 +1069,23 @@ wheels = [
 
 [[package]]
 name = "mjlab"
-version = "1.1.1"
-source = { git = "https://github.com/mujocolab/mjlab?tag=v1.1.1#3cb20cb64507f4d1cf5c8f271ff79b5144727025" }
+version = "1.6.0"
+source = { git = "https://github.com/mujocolab/mjlab?tag=v1.6.0#0fb8a681136be94ffc636a3dd423cabb97d91f10" }
 dependencies = [
+    { name = "imageio-ffmpeg" },
     { name = "mediapy" },
+    { name = "mjviser" },
     { name = "mujoco" },
     { name = "mujoco-warp" },
+    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.11.*'" },
+    { name = "numpy", version = "2.5.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
     { name = "onnxscript" },
     { name = "prettytable" },
     { name = "rsl-rl-lib" },
+    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.11.*'" },
+    { name = "scipy", version = "1.18.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
     { name = "tensorboard" },
     { name = "tensordict" },
     { name = "torch" },
@@ -1074,6 +1096,24 @@ dependencies = [
     { name = "viser" },
     { name = "wandb" },
     { name = "warp-lang" },
+]
+
+[[package]]
+name = "mjviser"
+version = "0.0.14"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "mujoco" },
+    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.11.*'" },
+    { name = "numpy", version = "2.5.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "pillow" },
+    { name = "trimesh" },
+    { name = "viser" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/1d/e4/eef89b279fb1811b5f120a99ac9284c32ff2ca4fad5e6f5c93035f72ba9a/mjviser-0.0.14.tar.gz", hash = "sha256:ebde2203dab89959a13ae549b4d3e5e5cf9eb69de11a1a2fd759cbe8f8c641f3", size = 29576, upload-time = "2026-05-07T03:35:13.128Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/9c/c2/4534d678ad1b3f7dee6fd83110112800287be21ba007d988abb9ddc8e0ac/mjviser-0.0.14-py3-none-any.whl", hash = "sha256:4b09f8e90506fc4a71d76fc628872147157947e9292428213ab78cfe137c9a26", size = 32296, upload-time = "2026-05-07T03:35:14.252Z" },
 ]
 
 [[package]]
@@ -1146,7 +1186,7 @@ wheels = [
 
 [[package]]
 name = "mujoco"
-version = "3.5.0"
+version = "3.11.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "absl-py" },
@@ -1158,29 +1198,26 @@ dependencies = [
     { name = "numpy", version = "2.5.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
     { name = "pyopengl" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/56/0d/005f0d49ad5878f0611a7c018550b8504d480a7a17ad7e6773ff47d8627a/mujoco-3.5.0.tar.gz", hash = "sha256:5c85a6fc7560ab5fa4534f35ff459e12dc3609681f307e457dbb49b6217f4d73", size = 912543, upload-time = "2026-02-13T01:02:51.554Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/3b/2d/290f3f4062eec1c0d5246de0a75f1b18b59a1961081f49ddc97333fc8263/mujoco-3.11.0.tar.gz", hash = "sha256:390856102af9547dfd87cb2791eb105a3d2e00a37323fe9a12ed17e512aff1a6", size = 1139880, upload-time = "2026-07-28T01:23:32.252Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e8/20/9e0595e653543df3e4233bc3ad7e50b371b81dbe48d45ffbc867ed7c379d/mujoco-3.5.0-cp310-cp310-macosx_10_16_x86_64.whl", hash = "sha256:c4324161cb4f334dd984fbb4a4f7d7db9f914f40d06174b02dcf05463d8275e4", size = 7088320, upload-time = "2026-02-13T01:02:06.745Z" },
-    { url = "https://files.pythonhosted.org/packages/8d/6b/fdac8ed97086e12ac930fb44e419eda1626e339010df73678cb1f22527d7/mujoco-3.5.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:5f3803ff0dd7bc04d6c47d53a794343843bde06f0aeefeac28bb62b4cf2baab3", size = 7093261, upload-time = "2026-02-13T01:02:09.857Z" },
-    { url = "https://files.pythonhosted.org/packages/19/ce/abcd9cc6ee7802f97c729ae0ccd517c68f04882f5db755b178e199511dc2/mujoco-3.5.0-cp310-cp310-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:e13560991c779a139b53151733a0a6f3420ef09459b32d90302c2661c1b20992", size = 6637850, upload-time = "2026-02-13T01:02:11.808Z" },
-    { url = "https://files.pythonhosted.org/packages/ca/d6/a5a7b615b257867b7c97db6b3ce07dec9351d5d9d5a5aca881cbb583d7a3/mujoco-3.5.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:01b12896ae906f157e18d8b1b7c24a8b72d2576fffa09869047150f186e92b33", size = 7079429, upload-time = "2026-02-13T01:02:13.738Z" },
-    { url = "https://files.pythonhosted.org/packages/7e/91/d82dd3c16892e1b0e27a2f537eec8aad54d91d939cb3cd37db2e8c09ecc2/mujoco-3.5.0-cp310-cp310-win_amd64.whl", hash = "sha256:2328358d2f0031175897092560dd6d04b14bab1cc22caa145ce99b843c17daa2", size = 5624454, upload-time = "2026-02-13T01:02:15.714Z" },
-    { url = "https://files.pythonhosted.org/packages/8b/47/e923589301c197c3ea0776b60cc0d57383b3cc51639ca75e4e4b6c5334d6/mujoco-3.5.0-cp311-cp311-macosx_10_16_x86_64.whl", hash = "sha256:6b3ae97c3f84d093e84dc445a093c893d9f4b6f6bbb1a441e56d77074c450553", size = 7100854, upload-time = "2026-02-13T01:02:17.649Z" },
-    { url = "https://files.pythonhosted.org/packages/82/02/aa6057ac4c50fb36558208005d6da19518f9a7857ef9b5fd2ed8f9262fe2/mujoco-3.5.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:e4fbb00809de98e8a65f2002745c5bca39076f8118b0fe08e973e7a99603c92b", size = 7105779, upload-time = "2026-02-13T01:02:19.621Z" },
-    { url = "https://files.pythonhosted.org/packages/94/8a/8d87db2cf09a95ff4dcac1bd8eb6ccb95680804eff8f2f70f1d7a11e1980/mujoco-3.5.0-cp311-cp311-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:2a8d48990172d3b1eb51f20cd08f537c488686b2bc370c504333c07c04595f5d", size = 6651006, upload-time = "2026-02-13T01:02:22.197Z" },
-    { url = "https://files.pythonhosted.org/packages/47/14/d5bf98385354318ec2e6c466a8c7cf7fd76f8b711ed6d11d155e2baa81fb/mujoco-3.5.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:ba54826121c6857fc4ca82df642d9a89174ce5537677c6ead34844bb692437e3", size = 7094833, upload-time = "2026-02-13T01:02:24.517Z" },
-    { url = "https://files.pythonhosted.org/packages/b8/98/c1fac334cc764068e6c5d7eb01d6ed2a3392bab51952c816888b2dfe78c2/mujoco-3.5.0-cp311-cp311-win_amd64.whl", hash = "sha256:ec0e35678773b34ee8b15741c34a745e027db062efcae790315aa83a5581c505", size = 5649612, upload-time = "2026-02-13T01:02:26.45Z" },
-    { url = "https://files.pythonhosted.org/packages/f9/f0/4772421643f1c5aaf46d9e500a8716f59b02c8bf30bfa92cb8a763159efb/mujoco-3.5.0-cp312-cp312-macosx_10_16_x86_64.whl", hash = "sha256:ec0587cc423385a8d45343a981df58511cb69758ba99164a71567af2d41be3c9", size = 7100581, upload-time = "2026-02-13T01:02:29.182Z" },
-    { url = "https://files.pythonhosted.org/packages/e1/d4/d0032323f58a9b8080b8464c6aade8d5ac2e101dbed1de64a38b3913b446/mujoco-3.5.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:94cf4285b46bc2d74fbe86e39a93ecfb3b0e584477fff7e38d293d47b88576e7", size = 7046132, upload-time = "2026-02-13T01:02:31.606Z" },
-    { url = "https://files.pythonhosted.org/packages/b8/7b/c1612ec68d98e5f3dbc5b8a21ff5d40ab52409fcc89ea7afc8a197983297/mujoco-3.5.0-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:12bfb2bb70f760e0d51fd59f3c43b2906c7660a23954fd717321da52ba85a617", size = 6677917, upload-time = "2026-02-13T01:02:34.13Z" },
-    { url = "https://files.pythonhosted.org/packages/c8/8a/229e4db3692be55532e155e2ca6a1363752243ee79df0e7e22ba00f716cf/mujoco-3.5.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:66fe37276644c28fab497929c55580725de81afc6d511a40cc27525a8dd99efa", size = 7170882, upload-time = "2026-02-13T01:02:36.086Z" },
-    { url = "https://files.pythonhosted.org/packages/02/37/527d83610b878f27c01dd762e0e41aaa62f095c607f0500ac7f724a2c7a5/mujoco-3.5.0-cp312-cp312-win_amd64.whl", hash = "sha256:4b3a62af174ab59b9b6d816dca0786b7fd85ac081d6c2a931a2b22dd6e821f50", size = 5721886, upload-time = "2026-02-13T01:02:39.544Z" },
+    { url = "https://files.pythonhosted.org/packages/ab/4f/cac3ffdff6fbd63860d1be28a7f45fa1206ed638d4c774fe4505b9563c7c/mujoco-3.11.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:6d830dab9f43781980d1e673f06938d80261f9960d8086d8a221ba0118b68c79", size = 17455595, upload-time = "2026-07-28T01:22:20.595Z" },
+    { url = "https://files.pythonhosted.org/packages/be/f5/f8dfdbc9964b24bb1c2fb60467474d7a85f160c609ce29099d6eda9806ec/mujoco-3.11.0-cp310-cp310-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:aac0102660762fad316cea63b81765593c97bdda0e22251eb64ff561f78e6853", size = 17632593, upload-time = "2026-07-28T01:22:23.616Z" },
+    { url = "https://files.pythonhosted.org/packages/64/f5/9bb09c44bbc7b3d844aed8517f130cbc99e565b5f5e8a55c8f06f40b8129/mujoco-3.11.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:39b813755f4b09b75a0ccaec0e1e37d313bc7c9ca1be94203a9aae3b7829cae0", size = 18727136, upload-time = "2026-07-28T01:22:26.625Z" },
+    { url = "https://files.pythonhosted.org/packages/43/40/e5123f0502dbb61158fa8f73b6d5576d3a818e3b3b07794732760759acf8/mujoco-3.11.0-cp310-cp310-win_amd64.whl", hash = "sha256:c82557572b279dd61540f2da6d61afed64ef765c210e24abeee4f2b2a57660bb", size = 15651634, upload-time = "2026-07-28T01:22:29.765Z" },
+    { url = "https://files.pythonhosted.org/packages/82/cb/eaa909bfdb093d82b80518182db89936fd0cc5486aeac31e71d9940e4800/mujoco-3.11.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:87a70b79d461b3afe03d1cd3dfb44b9ba1955a80b011a87c9536a6ef9c7936c8", size = 17474359, upload-time = "2026-07-28T01:22:32.578Z" },
+    { url = "https://files.pythonhosted.org/packages/68/d6/74fcb2a95b21de5217f19d9eb87db923d337e204da4dedaffeacababd28a/mujoco-3.11.0-cp311-cp311-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:d09bcec0d9338fd79095314c4bd3a3072d7063e94a27d47f78e6159ca9a2baa9", size = 17655486, upload-time = "2026-07-28T01:22:35.33Z" },
+    { url = "https://files.pythonhosted.org/packages/43/3d/3c933a7a8e7f00e12260ad175195b8bbc36fd3aa62068f00db36351a2147/mujoco-3.11.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:16f94f05745225aaafb68016cbd2a1617f4af6b4bfca6c97d22c7b14e598d1f1", size = 18751041, upload-time = "2026-07-28T01:22:38.149Z" },
+    { url = "https://files.pythonhosted.org/packages/a7/eb/e09d6ac38f3e7af2fec0b3501515973f8a400d9c3d1e22e727a21762f598/mujoco-3.11.0-cp311-cp311-win_amd64.whl", hash = "sha256:5a286601c6a73a21f576ac6405e842a3221eb7db53013084a5c2e341a35112ee", size = 15687351, upload-time = "2026-07-28T01:22:40.864Z" },
+    { url = "https://files.pythonhosted.org/packages/87/b3/b2b449b5978bcb13277c9e50d764e6d8cd9534f58f071fb1647724123e2c/mujoco-3.11.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:3609c198de090c8218b9cc62ca6133f0feede8edd103b743b8002f3f735fcd9b", size = 17511145, upload-time = "2026-07-28T01:22:43.668Z" },
+    { url = "https://files.pythonhosted.org/packages/1a/65/d8130bb8a673f9cdc8a8fb2ef02f9b6931708567de57f17395106e83b4e3/mujoco-3.11.0-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:517bff03623c3329a563f575afd7d731b0be5c4f92a54dcec934b99120b4a9ec", size = 17704436, upload-time = "2026-07-28T01:22:47.05Z" },
+    { url = "https://files.pythonhosted.org/packages/41/d6/7b79f5d8fbd019658a3b5feb6ffd09c1e727eaf93f518685d3cc105a28f5/mujoco-3.11.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:f40214fefc8c2fe0002a3c8abadf30de7a3330634f3c45cc29b407b40a0173fc", size = 18868030, upload-time = "2026-07-28T01:22:50.494Z" },
+    { url = "https://files.pythonhosted.org/packages/19/46/f994cd7d973c4db4f6b5af19ba6eb62703b9aafc8f894c5bc5ceadd31b0d/mujoco-3.11.0-cp312-cp312-win_amd64.whl", hash = "sha256:98c08a5eec9411ecd6f763f1e635fbc8f31e3ea3701584d6b7edcc24d8d6c575", size = 15791637, upload-time = "2026-07-28T01:22:53.922Z" },
 ]
 
 [[package]]
 name = "mujoco-warp"
-version = "3.5.0"
-source = { git = "https://github.com/google-deepmind/mujoco_warp?rev=fc9158989525538db53a2a8c3c0f156cbfeca911#fc9158989525538db53a2a8c3c0f156cbfeca911" }
+version = "3.11.0"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "absl-py" },
     { name = "etils", version = "1.13.0", source = { registry = "https://pypi.org/simple" }, extra = ["epath"], marker = "python_full_version < '3.11'" },
@@ -1190,6 +1227,10 @@ dependencies = [
     { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.11.*'" },
     { name = "numpy", version = "2.5.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
     { name = "warp-lang" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/2c/02/da883029b3661619651d0e2469ec17df92dd64ca5de25119886d516ee1de/mujoco_warp-3.11.0.tar.gz", hash = "sha256:e9e521a3809b95baa98c44bd4fcaccb035b5c700e2616efc52ebc33d29ae2eef", size = 2075418, upload-time = "2026-07-28T01:21:41.987Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e6/03/9bf86946c755a9a020c1bea587841472b0206351f73f67e41050fcb2a20c/mujoco_warp-3.11.0-py3-none-any.whl", hash = "sha256:97e77e877c1c2ea064ae68eaace2333dec94f2d8984091ba7b383bc8c34958f6", size = 2153348, upload-time = "2026-07-28T01:21:40.18Z" },
 ]
 
 [[package]]
@@ -1213,9 +1254,9 @@ source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
     "(python_full_version >= '3.12' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version >= '3.12' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version >= '3.12' and sys_platform != 'darwin' and sys_platform != 'linux')",
     "python_full_version >= '3.12' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
+    "python_full_version >= '3.12' and sys_platform == 'darwin'",
     "(python_full_version == '3.11.*' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version == '3.11.*' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version == '3.11.*' and sys_platform != 'darwin' and sys_platform != 'linux')",
     "python_full_version == '3.11.*' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'",
-    "python_full_version >= '3.12' and sys_platform == 'darwin'",
     "python_full_version == '3.11.*' and sys_platform == 'darwin'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/6a/51/63fe664f3908c97be9d2e4f1158eb633317598cfa6e1fc14af5383f17512/networkx-3.6.1.tar.gz", hash = "sha256:26b7c357accc0c8cde558ad486283728b65b6a95d85ee1cd66bafab4c8168509", size = 2517025, upload-time = "2025-12-08T17:02:39.908Z" }
@@ -2071,7 +2112,7 @@ wheels = [
 
 [[package]]
 name = "rsl-rl-lib"
-version = "4.0.1"
+version = "5.4.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "gitpython" },
@@ -2080,14 +2121,15 @@ dependencies = [
     { name = "numpy", version = "2.5.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
     { name = "onnx" },
     { name = "onnxscript" },
+    { name = "tensorboard" },
     { name = "tensordict" },
     { name = "torch" },
     { name = "torchvision", version = "0.24.0", source = { registry = "https://download.pytorch.org/whl/cu126" }, marker = "platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'" },
     { name = "torchvision", version = "0.24.0+cu126", source = { registry = "https://download.pytorch.org/whl/cu126" }, marker = "platform_machine != 'aarch64' or platform_python_implementation != 'CPython' or sys_platform != 'linux'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/aa/5b/5bea7c110c389f9336ebe5ad7cd9abbcbbb64d7de0d0f50c2af8fa2ce321/rsl_rl_lib-4.0.1.tar.gz", hash = "sha256:76a194e4834946716cc0e44dcd2be8b2254ac969c2452b145cd268c9cc908bf7", size = 41069, upload-time = "2026-02-09T09:15:10.927Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/cc/a6/11460213f75318253ae20d792802faa0c3cfe2b49e29ec785e590cd81eaa/rsl_rl_lib-5.4.2.tar.gz", hash = "sha256:688e881db7f7af06d12e5498fd6f0c41b0e2f858dc0667f5fd68219c86b9667d", size = 66011, upload-time = "2026-07-15T09:45:34.847Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/31/db/8fa8832e6e02e5c4dc8321eb1596d5968b86a214fca03af361c94b8b045f/rsl_rl_lib-4.0.1-py3-none-any.whl", hash = "sha256:e840c8587acaad4ba3ab34fc7b07a203b34dd44a831ea9dc5de1769bfc14b148", size = 53803, upload-time = "2026-02-09T09:15:09.705Z" },
+    { url = "https://files.pythonhosted.org/packages/48/fa/7f4da9b79f98c1f6d899b80723da8ede4c408a30f5a832ce8e94f92c1052/rsl_rl_lib-5.4.2-py3-none-any.whl", hash = "sha256:8fe07f6746df351f23467e0825e17e776835cb172d7e3fdf806120774bab61a3", size = 92923, upload-time = "2026-07-15T09:45:33.579Z" },
 ]
 
 [[package]]
@@ -2411,10 +2453,10 @@ version = "0.24.0+cu126"
 source = { registry = "https://download.pytorch.org/whl/cu126" }
 resolution-markers = [
     "(python_full_version >= '3.12' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version >= '3.12' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version >= '3.12' and sys_platform != 'darwin' and sys_platform != 'linux')",
-    "(python_full_version == '3.11.*' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version == '3.11.*' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version == '3.11.*' and sys_platform != 'darwin' and sys_platform != 'linux')",
-    "(python_full_version < '3.11' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version < '3.11' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version < '3.11' and sys_platform != 'darwin' and sys_platform != 'linux')",
     "python_full_version >= '3.12' and sys_platform == 'darwin'",
+    "(python_full_version == '3.11.*' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version == '3.11.*' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version == '3.11.*' and sys_platform != 'darwin' and sys_platform != 'linux')",
     "python_full_version == '3.11.*' and sys_platform == 'darwin'",
+    "(python_full_version < '3.11' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version < '3.11' and platform_python_implementation != 'CPython' and sys_platform == 'linux') or (python_full_version < '3.11' and sys_platform != 'darwin' and sys_platform != 'linux')",
     "python_full_version < '3.11' and sys_platform == 'darwin'",
 ]
 dependencies = [
@@ -2590,7 +2632,7 @@ wheels = [
 
 [[package]]
 name = "warp-lang"
-version = "1.12.0.dev20260206"
+version = "1.14.0"
 source = { registry = "https://pypi.nvidia.com/" }
 dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
@@ -2598,10 +2640,10 @@ dependencies = [
     { name = "numpy", version = "2.5.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
 ]
 wheels = [
-    { url = "https://pypi.nvidia.com/warp-lang/warp_lang-1.12.0.dev20260206-py3-none-macosx_11_0_arm64.whl", hash = "sha256:15d4b8ff8cd85e41940f84c47cbe760b7d0960e095f91259563137012be35a13" },
-    { url = "https://pypi.nvidia.com/warp-lang/warp_lang-1.12.0.dev20260206-py3-none-manylinux_2_28_x86_64.whl", hash = "sha256:b08955ce29739e836d3903451dce19e665e4ff0964e9ce95074d6970b1c662e1" },
-    { url = "https://pypi.nvidia.com/warp-lang/warp_lang-1.12.0.dev20260206-py3-none-manylinux_2_34_aarch64.whl", hash = "sha256:d369037d2f77db230cc558b6613eb90b7485c3f1263ada9ea44c2231b88a6cfd" },
-    { url = "https://pypi.nvidia.com/warp-lang/warp_lang-1.12.0.dev20260206-py3-none-win_amd64.whl", hash = "sha256:9167ef18225ced45821d89d8f5951da4f6b78c196eb0340fbe440062ce4d7968" },
+    { url = "https://pypi.nvidia.com/warp-lang/warp_lang-1.14.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:12656050545cc77bf9b9b155399496c1a6279b5b6c59e407507d6858a2beb4a2" },
+    { url = "https://pypi.nvidia.com/warp-lang/warp_lang-1.14.0-py3-none-manylinux_2_28_x86_64.whl", hash = "sha256:70cd127d0e9109417099649fedf9d00f39f1307ccb7a6e9fb87661337868d7de" },
+    { url = "https://pypi.nvidia.com/warp-lang/warp_lang-1.14.0-py3-none-manylinux_2_34_aarch64.whl", hash = "sha256:f482787e8da9c9ef045601fde99095e16d604fbcc3cbb4a1e0cef0769388b316" },
+    { url = "https://pypi.nvidia.com/warp-lang/warp_lang-1.14.0-py3-none-win_amd64.whl", hash = "sha256:936b49ec78237f9760e58cbe9c46ee6f4244aefbd62071c4fa9fd3b313dfa878" },
 ]
 
 [[package]]

@@ -11,15 +11,16 @@ def leap_left_custom_hand_cube_rotate_ppo_cfg() -> RslRlOnPolicyRunnerCfg:
       hidden_dims=(512, 512, 256),
       activation="elu",
       obs_normalization=True,
-      stochastic=True,
-      init_noise_std=0.7,
+      distribution_cfg={
+        "class_name": "GaussianDistribution",
+        "init_std": 0.7,
+        "std_type": "scalar",
+      },
     ),
     critic=RslRlModelCfg(
       hidden_dims=(512, 512, 256),
       activation="elu",
       obs_normalization=True,
-      stochastic=False,
-      init_noise_std=0.7,
     ),
     algorithm=RslRlPpoAlgorithmCfg(
       value_loss_coef=1.0,

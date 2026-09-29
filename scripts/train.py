@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Literal, cast
 
 import tyro
-from rsl_rl.runners import OnPolicyRunner
+from mjlab.rl import MjlabOnPolicyRunner
 
 from mjlab.envs import ManagerBasedRlEnv, ManagerBasedRlEnvCfg
 from mjlab.rl import RslRlOnPolicyRunnerCfg, RslRlVecEnvWrapper
@@ -155,8 +155,6 @@ def run_train(task_id: str, cfg: TrainConfig, log_dir: Path) -> None:
       step_trigger=lambda step: step % cfg.video_interval == 0,
       video_length=video_length,
       disable_logger=True,
-      log_to_wandb=cfg.agent.logger == "wandb",
-      wandb_log_key="videos/train",
     )
     print(
       "[INFO] Video config: "
@@ -171,7 +169,7 @@ def run_train(task_id: str, cfg: TrainConfig, log_dir: Path) -> None:
 
   runner_cls = load_runner_cls(task_id)
   if runner_cls is None:
-    runner_cls = OnPolicyRunner
+    runner_cls = MjlabOnPolicyRunner
 
   runner_kwargs = {}
   if is_tracking_task:
