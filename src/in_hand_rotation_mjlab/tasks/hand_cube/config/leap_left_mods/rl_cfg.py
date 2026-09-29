@@ -13,3 +13,9 @@ def leap_left_hand_cube_rotate_softgate_ppo_cfg() -> RslRlOnPolicyRunnerCfg:
     cfg = leap_left_hand_cube_rotate_ppo_cfg()
     cfg.experiment_name = "leap_left_hand_cube_rotate_softgate"
     return cfg
+
+
+def leap_left_hand_cube_rotate_widefriction_ppo_cfg() -> RslRlOnPolicyRunnerCfg:
+    cfg = leap_left_hand_cube_rotate_ppo_cfg()
+    cfg.experiment_name = "leap_left_hand_cube_rotate_widefriction"
+    return cfg

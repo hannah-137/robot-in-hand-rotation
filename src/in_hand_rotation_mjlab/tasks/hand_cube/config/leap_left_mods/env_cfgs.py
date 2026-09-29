@@ -19,3 +19,21 @@ def leap_left_hand_cube_rotate_softgate_env_cfg(
     cfg = leap_left_hand_cube_rotate_env_cfg(play=play)
     cfg.rewards["rotate_finite_diff"].params["drift_mode"] = "soft"
     return cfg
+
+
+WIDE_FRICTION_RANGE = (0.4, 1.8)
+
+
+def leap_left_hand_cube_rotate_widefriction_env_cfg(
+    play: bool = False,
+) -> ManagerBasedRlEnvCfg:
+    """Baseline config with a wider hand-cube friction randomization range.
+
+    Only ``events["dr_shared_contact_friction"].params["friction_range"]``
+    changes from (0.6, 1.4) to ``WIDE_FRICTION_RANGE``.
+    """
+    cfg = leap_left_hand_cube_rotate_env_cfg(play=play)
+    cfg.events["dr_shared_contact_friction"].params["friction_range"] = (
+        WIDE_FRICTION_RANGE
+    )
+    return cfg
