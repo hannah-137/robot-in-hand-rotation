@@ -410,7 +410,6 @@ LEAP_COLLISION = CollisionCfg(
         "rf_.*": 23,             # 1 | 2 | 4 | 16  (ext + idx + mid + thumb)
         "th_.*": 15,             # 1 | 2 | 4 | 8   (ext + idx + mid + ring)
     },
-    priority=0,
 
     # Fingertips get rich contact, others soft
     condim={

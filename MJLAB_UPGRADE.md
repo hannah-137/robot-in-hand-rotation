@@ -13,7 +13,7 @@
 |---|---|
 | 1. 정적 대조 | 완료 |
 | 2. 코드 수정 | 완료. `uv.lock`도 다시 만듦 |
-| 3. 바리스타 실행 확인 | 대기 |
+| 3. 바리스타 실행 확인 | 진행 중. 설치 완료 |
 
 ## 1. 의존성 버전
 
@@ -53,19 +53,21 @@
 
 | # | 파일 | 문제 | 고친 방법 | 동작 변화 | 상태 |
 |---|---|---|---|---|---|
-| 12 | `robots/leap_hand/leap_right_constants.py` | `CollisionCfg`의 `contype`, `conaffinity`, `condim`, `priority`가 필수가 됨. 지금 `priority`가 없음 | 예전 기본값 `priority=0`만 추가. 세 XML의 충돌 geom 71개가 이미 모든 패턴에 걸려서 다른 수정은 필요 없어요 | 없음 | 고침 |
+| 12 | `robots/leap_hand/leap_right_constants.py` | `CollisionCfg`의 `contype`, `conaffinity`, `condim`, `priority`가 필수가 됨 | 수정 필요 없음. 원래 설정에 네 값이 모두 있어요. `priority`는 설정 끝부분에 `".*"` 기본값과 함께 있어요. 세 XML의 충돌 geom 71개도 모든 패턴에 걸려요. 처음에 `priority`가 없다고 잘못 보고 한 줄을 넣었다가 지웠어요. 5번 참고 | 없음 | 문제 아님 |
 | 13 | `scripts/train.py`, `scripts/play.py`, `scripts/record_replay_trajectory.py`, `policy_server/loader.py`, `sim2sim/policy.py` | rsl_rl 5에 넘기는 설정 형식이 바뀜. mjlab v1.6.0은 None 값 설정을 지워주는 `MjlabOnPolicyRunner`를 씀 | rsl_rl의 `OnPolicyRunner` 대신 `mjlab.rl.MjlabOnPolicyRunner`를 씀. 생성자와 메서드는 같아요 | 없음 | 고침 |
 | 14 | 체크포인트 | rsl_rl 5에서 노이즈 파라미터 이름이 `std`에서 `distribution.std_param`으로 바뀜. 예전 체크포인트는 그대로 못 읽어요. 교수님 체크포인트와 우리 baseline 둘 다 해당돼요 | 결정 필요: 읽을 때 이름만 바꾸는 작은 변환을 넣을지 | 없음. 재생할 때는 평균 행동만 써요 | 결정 대기 |
 | 15 | 물리 엔진 | MuJoCo가 3.5에서 3.11로 바뀜 | 코드 수정은 없어요. 체크포인트 재생과 짧은 학습으로 확인해요. 필요하면 grasp cache를 다시 만들어요 | 확인 필요 | 실행 때 확인 |
 
 ## 4. 확인 결과
 
+바리스타에서는 GPU 1을 써요. 2026-09-29에 사용자가 요청했어요. GPU 2와 3은 Cosmos 작업이 쓰고 있어요.
+
 | 항목 | 방법 | 결과 | 링크 |
 |---|---|---|---|
 | 정적 검사 다시 실행 | `scripts/check_mjlab_api.py` | 2번 표의 문제가 모두 사라짐 | - |
-| 문법 검사 | 수정한 파이썬 파일 15개 | 통과 | - |
+| 컴파일 검사 | 수정한 파이썬 파일에 `compile()` | 처음에는 `ast.parse`로 문장 구조만 봐서 인자 중복을 못 잡았어요. `compile()`로 바꾼 뒤 16개 모두 통과 | - |
 | `uv.lock` 재생성 | `uv lock`, 설치 없음 | 완료. 141개 패키지 중 7개 변경: mjlab 1.6.0, mujoco 3.11.0, mujoco-warp 3.11.0, warp-lang 1.14.0, rsl-rl-lib 5.4.2 갱신, mjviser 0.0.14, imageio-ffmpeg 0.6.0 추가. torch는 그대로 | - |
-| 설치 | `uv sync --dry-run` 후 `uv sync` | 대기 | - |
+| 설치 | 바리스타 `setup_env.sh`. dry run 확인 후 `uv sync --locked` | 완료. 128개 설치, `.venv` 7.0 GB. torch 2.9.0+cu126에서 CUDA 사용 가능, mujoco 3.11.0, mjlab 1.6.0. 로그는 바리스타 `/data/hyeonahj/tools/robot-hand-env/logs/setup_20260929_161618.log` | - |
 | 작업 목록 출력 | `scripts/list_envs.py` | 대기 | - |
 | random 에이전트 재생 | `scripts/play.py --agent random` | 대기 | - |
 | 짧은 학습 | 256 env, 20 iteration | 대기 | - |
@@ -73,7 +75,9 @@
 
 ## 5. 에러와 해결
 
-아직 없어요.
+| 날짜 | 단계 | 에러 | 원인 | 해결 |
+|---|---|---|---|---|
+| 2026-09-29 | 바리스타 작업 목록 출력 | `leap_right_constants.py` 431줄 `SyntaxError: keyword argument repeated: priority` | 원래 충돌 설정 끝부분에 `priority`가 이미 있었어요. 설정 앞부분만 읽고 없다고 판단해서 `priority=0`을 한 줄 더 넣었어요. 검사에 쓴 `ast.parse`는 인자 중복을 못 잡아요 | 넣은 줄을 지웠어요. 충돌 설정은 교수님 코드와 같아졌어요. 검사를 `compile()`로 바꿨어요 |
 
 ## 6. 정할 것
 
