@@ -61,6 +61,13 @@ class object_yaw_finite_diff_clipped:
   Optionally, the yaw reward is multiplied by a drift factor based on object
   translation and roll/pitch deviation from reset pose. This suppresses reward
   when the cube drifts via non-target motion.
+
+  ``drift_mode`` selects how the factor is computed:
+  - "step": inside_factor inside the thresholds, outside_factor outside.
+  - "exp": 1.0 inside the thresholds, exponential decay outside.
+  - "soft": decreases with pose error inside the thresholds, from
+    inside_factor at zero error to outside_factor at the threshold. Outside
+    the thresholds it equals outside_factor.
   """
 
   def __init__(self, cfg: RewardTermCfg, env: ManagerBasedRlEnv):
@@ -179,9 +186,27 @@ class object_yaw_finite_diff_clipped:
         -drift_decay_k_pos * pos_excess - drift_decay_k_tilt * tilt_excess
       )
       drift_factor = torch.clamp(drift_factor, min=drift_min_factor, max=1.0)
+    elif drift_mode == "soft":
+      # Pose scores are 1 at zero error and 0 at the threshold, as in the
+      # rotation_progress metric. The factor is inside_factor at zero error
+      # and outside_factor at or beyond the threshold.
+      pos_score = torch.clamp(
+        1.0 - pos_error / max(drift_position_threshold, 1e-6),
+        min=0.0,
+        max=1.0,
+      )
+      tilt_score = torch.clamp(
+        1.0 - tilt_error / max(drift_tilt_threshold, 1e-6),
+        min=0.0,
+        max=1.0,
+      )
+      drift_factor = drift_outside_factor + (
+        drift_inside_factor - drift_outside_factor
+      ) * pos_score * tilt_score
     else:
       raise ValueError(
-        f"Unknown drift_mode '{drift_mode}'. Expected one of: 'step', 'exp'."
+        f"Unknown drift_mode '{drift_mode}'. "
+        "Expected one of: 'step', 'exp', 'soft'."
       )
 
     drift_factor = torch.where(
