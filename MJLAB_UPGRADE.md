@@ -56,7 +56,8 @@
 | 12 | `robots/leap_hand/leap_right_constants.py` | `CollisionCfg`의 `contype`, `conaffinity`, `condim`, `priority`가 필수가 됨 | 수정 필요 없음. 원래 설정에 네 값이 모두 있어요. `priority`는 설정 끝부분에 `".*"` 기본값과 함께 있어요. 세 XML의 충돌 geom 71개도 모든 패턴에 걸려요. 처음에 `priority`가 없다고 잘못 보고 한 줄을 넣었다가 지웠어요. 5번 참고 | 없음 | 문제 아님 |
 | 13 | `scripts/train.py`, `scripts/play.py`, `scripts/record_replay_trajectory.py`, `policy_server/loader.py`, `sim2sim/policy.py` | rsl_rl 5에 넘기는 설정 형식이 바뀜. mjlab v1.6.0은 None 값 설정을 지워주는 `MjlabOnPolicyRunner`를 씀 | rsl_rl의 `OnPolicyRunner` 대신 `mjlab.rl.MjlabOnPolicyRunner`를 씀. 생성자와 메서드는 같아요 | 없음 | 고침 |
 | 14 | 체크포인트 | rsl_rl 5에서 노이즈 파라미터 이름이 `std`에서 `distribution.std_param`으로 바뀜. 예전 체크포인트는 그대로 못 읽어요. 교수님 체크포인트와 우리 baseline 둘 다 해당돼요 | 결정 필요: 읽을 때 이름만 바꾸는 작은 변환을 넣을지 | 없음. 재생할 때는 평균 행동만 써요 | 결정 대기 |
-| 15 | 물리 엔진 | MuJoCo가 3.5에서 3.11로 바뀜 | 코드 수정은 없어요. 체크포인트 재생과 짧은 학습으로 확인해요. 필요하면 grasp cache를 다시 만들어요 | 확인 필요 | 실행 때 확인 |
+| 15 | 물리 엔진 | MuJoCo가 3.5에서 3.11로 바뀜 | 코드 수정은 없어요. grasp cache를 v1.6.0에서 다시 만들어 비교했어요. 통과 수는 7418에서 7762로 조금 늘었고, 큐브 위치 차이는 0.3 mm 이하, 기울기 차이는 0.03°, 관절 차이는 최대 0.002 rad였어요. 그래서 예전 cache를 그대로 써요 | 4번 표의 baseline 비교 참고 | 확인함 |
+| 16 | 큐브 크기 랜덤화 뒤의 충돌 경계값 | 레포의 큐브 크기 함수는 크기만 바꾸고 `geom_rbound`, `geom_aabb`는 그대로 둬요. 새 mjlab의 `dr.geom_size`는 이 값도 다시 계산해요 | 수정 없음. 두 엔진 모두 같은 기본 걸러내기 설정에서 이 값을 같은 방식으로 써요. 그래서 예전 동작과 같아요 | 없음 | 확인함 |
 
 ## 4. 확인 결과
 
@@ -68,10 +69,13 @@
 | 컴파일 검사 | 수정한 파이썬 파일에 `compile()` | 처음에는 `ast.parse`로 문장 구조만 봐서 인자 중복을 못 잡았어요. `compile()`로 바꾼 뒤 16개 모두 통과 | - |
 | `uv.lock` 재생성 | `uv lock`, 설치 없음 | 완료. 141개 패키지 중 7개 변경: mjlab 1.6.0, mujoco 3.11.0, mujoco-warp 3.11.0, warp-lang 1.14.0, rsl-rl-lib 5.4.2 갱신, mjviser 0.0.14, imageio-ffmpeg 0.6.0 추가. torch는 그대로 | - |
 | 설치 | 바리스타 `setup_env.sh`. dry run 확인 후 `uv sync --locked` | 완료. 128개 설치, `.venv` 7.0 GB. torch 2.9.0+cu126에서 CUDA 사용 가능, mujoco 3.11.0, mjlab 1.6.0. 로그는 바리스타 `/data/hyeonahj/tools/robot-hand-env/logs/setup_20260929_161618.log` | - |
-| 작업 목록 출력 | `scripts/list_envs.py` | 대기 | - |
-| random 에이전트 재생 | `scripts/play.py --agent random` | 대기 | - |
-| 짧은 학습 | 256 env, 20 iteration | 대기 | - |
-| baseline 학습 | 4096 env, 5000 iteration | 보너스 범위 정한 뒤 | - |
+| 작업 목록 출력 | `scripts/list_envs.py` | 처음에는 12번 문제로 실패, 고친 뒤 성공. LEAP task 3개 등록. 로그는 바리스타 `robot-hand-env/logs/list_envs_20260929_190702.log` | - |
+| zero 에이전트 재생 | `scripts/play.py --agent zero`, GPU 1, 4 env, 2분 | 환경 생성, 관리자 설정, grasp cache 7418개 읽기, 뷰어 시작까지 에러 없음. 로그는 바리스타 `robot-hand-env/logs/play_zero_20260929_191409.log` | - |
+| random 에이전트 재생 | `scripts/play.py --agent random`, GPU 1, 4 env, 2분 | 첫 실행은 GPU 커널 컴파일로 2분이 지나 확인 못함. 다시 실행해서 환경 생성과 뷰어 시작까지 에러 없음. 도는 동안 GPU 1 사용률 20~24%, 메모리 590 MB로 꾸준해서 스텝이 실제로 돈 것을 확인. 로그는 바리스타 `robot-hand-env/logs/play_random_20260929_192744.log` | - |
+| 물리 옵션 경고 | 재생 로그 첫 줄 | 손 XML의 `<option>` 값 `impratio=100`, `implicitfast`, `elliptic`은 손을 장면에 붙일 때 무시돼요. 실제 값은 env 설정이 정해요. `impratio=10`, `cone="elliptic"`을 직접 넣고, 적분기는 두 버전 모두 기본값 `implicitfast`예요. 그래서 예전과 같아요 | - |
+| 짧은 학습 | 256 env, 20 iteration, seed 42, GPU 1, 바리스타 RTX 6000 Ada | 정상 종료. 보상 값 정상, NaN 종료 0번. 에피소드 길이 13에서 306 스텝으로 늘어서 v1.1.1 확인 학습과 같은 경향. iteration당 1.5~1.7초. 경고는 tyro 타입 표기 경고와 W&B 안내뿐이고 영향 없음. 로그는 바리스타 `robot-hand-env/logs/train_test256_20260929_193845.log` | [W&B](https://wandb.ai/hyeonah-jung-usc/robot-hand-latest-test/runs/oupu57ii) |
+| baseline 학습 | 4096 env, 5000 iteration, seed 42, GPU 1, W&B 프로젝트 `robot-hand-latest`, run 이름 `baseline` | 정상 종료. iteration당 약 2.5초. 마지막 100 iteration 평균을 v1.1.1 baseline과 비교하면, 회전 보상 0.243 대 0.252로 비슷하고 에피소드 길이 391 대 385로 실패는 조금 적어요. 위치 오차 1.17 cm 대 0.95 cm, 기울기 오차 0.175 대 0.145 rad로 커서 `rotation_progress`가 0.176 대 0.317로 낮아요. grasp cache와 충돌 경계값은 원인이 아니에요. 남은 후보는 접촉 계산 변화, 무게중심과 armature 재계산, rsl_rl 5, 학습 seed 하나의 우연이에요. 로그는 바리스타 `robot-hand-env/logs/train_baseline_20260929_210234.log` | [W&B](https://wandb.ai/hyeonah-jung-usc/robot-hand-latest/runs/4fjqzu9p) |
+| grasp cache 재생성 | `scripts/collect_hand_cube_grasp_cache.py`, 기본값, GPU 1, 레포 밖에 저장 | 7762개 통과. 예전 cache와 거의 같음. 15번 참고. 파일은 바리스타 `robot-hand-env/grasp_cache_mjlab160/`, 로그는 `robot-hand-env/logs/collect_grasp_cache_20260930_043608.log` | - |
 
 ## 5. 에러와 해결
 
