@@ -61,6 +61,18 @@ class object_yaw_finite_diff_clipped:
   Optionally, the yaw reward is multiplied by a drift factor based on object
   translation and roll/pitch deviation from reset pose. This suppresses reward
   when the cube drifts via non-target motion.
+
+  ``drift_mode`` selects how the factor is computed:
+  - "step": inside_factor inside the thresholds, outside_factor outside.
+  - "exp": 1.0 inside the thresholds, exponential decay outside.
+  - "soft": decreases with pose error inside the thresholds, from
+    inside_factor at zero error to outside_factor at the threshold. Outside
+    the thresholds it equals outside_factor.
+
+  ``drift_soft_tolerance`` is used only in "soft" mode. It is the part of
+  each threshold with no penalty. With 0.5, errors up to half the threshold
+  give inside_factor, and the factor decreases from there to the threshold.
+  With 0.0 (the default), the factor starts to decrease at zero error.
   """
 
   def __init__(self, cfg: RewardTermCfg, env: ManagerBasedRlEnv):
@@ -118,6 +130,7 @@ class object_yaw_finite_diff_clipped:
     drift_decay_k_pos: float = 30.0,
     drift_decay_k_tilt: float = 3.0,
     drift_min_factor: float = 0.1,
+    drift_soft_tolerance: float = 0.0,
   ) -> torch.Tensor:
     del object_name  # Bound in __init__ for consistency across calls.
     if history_steps is not None and history_steps != self.history_steps:
@@ -179,9 +192,29 @@ class object_yaw_finite_diff_clipped:
         -drift_decay_k_pos * pos_excess - drift_decay_k_tilt * tilt_excess
       )
       drift_factor = torch.clamp(drift_factor, min=drift_min_factor, max=1.0)
+    elif drift_mode == "soft":
+      # Pose scores are 1 up to the tolerance and 0 at the threshold. The
+      # factor is inside_factor up to the tolerance and outside_factor at or
+      # beyond the threshold.
+      pos_tol = drift_soft_tolerance * drift_position_threshold
+      tilt_tol = drift_soft_tolerance * drift_tilt_threshold
+      pos_score = torch.clamp(
+        1.0 - (pos_error - pos_tol) / max(drift_position_threshold - pos_tol, 1e-6),
+        min=0.0,
+        max=1.0,
+      )
+      tilt_score = torch.clamp(
+        1.0 - (tilt_error - tilt_tol) / max(drift_tilt_threshold - tilt_tol, 1e-6),
+        min=0.0,
+        max=1.0,
+      )
+      drift_factor = drift_outside_factor + (
+        drift_inside_factor - drift_outside_factor
+      ) * pos_score * tilt_score
     else:
       raise ValueError(
-        f"Unknown drift_mode '{drift_mode}'. Expected one of: 'step', 'exp'."
+        f"Unknown drift_mode '{drift_mode}'. "
+        "Expected one of: 'step', 'exp', 'soft'."
       )
 
     drift_factor = torch.where(
