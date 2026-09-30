@@ -19,6 +19,8 @@ Usage, inside the container from the repo root:
     --out-dir /workspace/robot-hand/eval
 
 "default" keeps the training friction randomization of the task.
+--obs-noise turns on the actor observation noise of the training config.
+--stochastic samples actions from the policy distribution, as in training.
 
 Outputs in --out-dir:
   summary.csv, summary.md   one row per run and condition
@@ -82,6 +84,8 @@ def make_env_cfg(args, condition: str):
   cfg = load_env_cfg(args.task, play=True)
   cfg.scene.num_envs = args.num_envs
   cfg.seed = args.seed
+  if args.obs_noise:
+    cfg.observations[args.actor_group].enable_corruption = True
   if condition != "default":
     if args.friction_event not in cfg.events:
       raise SystemExit(f"error: event '{args.friction_event}' not found in {args.task}")
@@ -130,7 +134,7 @@ def evaluate(args, name: str, checkpoint: str, condition: str, steps: int) -> di
     sat_sum = torch.zeros(n, device=device)
 
     for t in range(steps):
-      actions = policy(obs)
+      actions = policy(obs, stochastic_output=args.stochastic)
       sat = (actions.abs() > clip).float().mean(dim=1)
       obs, _, dones, _ = wrapped.step(actions)
       done = dones.bool()
@@ -263,6 +267,9 @@ def main() -> None:
   parser.add_argument("--num-envs", type=int, default=1024)
   parser.add_argument("--steps", type=int, default=None, help="default: one training episode")
   parser.add_argument("--seed", type=int, default=0)
+  parser.add_argument("--obs-noise", action="store_true", help="actor observation noise on")
+  parser.add_argument("--stochastic", action="store_true", help="sample actions from the policy")
+  parser.add_argument("--actor-group", default="actor")
   parser.add_argument("--device", default="cuda:0")
   parser.add_argument("--out-dir", required=True)
   args = parser.parse_args()
@@ -276,7 +283,8 @@ def main() -> None:
   out = Path(args.out_dir)
   out.mkdir(parents=True, exist_ok=True)
   print(f"[eval] {len(runs)} runs x {len(args.friction)} conditions, "
-        f"{args.num_envs} envs, {steps} steps, seed {args.seed}")
+        f"{args.num_envs} envs, {steps} steps, seed {args.seed}, "
+        f"obs_noise={args.obs_noise}, stochastic={args.stochastic}")
 
   rows = []
   for condition in args.friction:
@@ -285,6 +293,8 @@ def main() -> None:
       print(f"[eval] run={name} condition={condition}")
       result = evaluate(args, name, checkpoint, condition, steps)
       row = summarize(name, condition, result, reference)
+      row["obs_noise"] = args.obs_noise
+      row["stochastic"] = args.stochastic
       if reference is None:
         reference = result["per_env"]["init_state"]
       rows.append(row)
