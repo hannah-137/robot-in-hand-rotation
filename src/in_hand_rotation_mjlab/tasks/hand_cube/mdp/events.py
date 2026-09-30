@@ -683,3 +683,21 @@ def sync_actuator_delays(
   # Apply the same lag to all delayed actuators.
   for actuator in delayed_actuators:
     actuator.set_lags(lags, env_ids)
+
+
+@requires_model_fields("body_ipos")
+def body_com_offset_no_recompute(
+  env: ManagerBasedRlEnv,
+  env_ids: torch.Tensor | None,
+  **kwargs,
+) -> None:
+  """Randomize the cube COM like dr.body_com_offset, but without set_const.
+
+  In mjlab v1.6.0, set_const runs after this event and updates the body poses.
+  Then the reset terms of this task store the new start pose. In mjlab v1.1.1
+  they stored the pose from before the reset. The task was tuned with the
+  v1.1.1 behavior, so we keep it.
+  """
+  from mjlab.envs.mdp import dr
+
+  dr.body_com_offset(env, env_ids, **kwargs)

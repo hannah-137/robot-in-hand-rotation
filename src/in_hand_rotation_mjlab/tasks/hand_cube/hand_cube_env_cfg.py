@@ -533,7 +533,7 @@ def make_hand_cube_embodiment_env_cfg(
     
     # Domain randomization events (shared across all embodiments)
     cfg.events["dr_cube_com"] = EventTermCfg(
-        func=envs_mdp.dr.body_com_offset,
+        func=hand_cube_mdp.body_com_offset_no_recompute,
         mode="reset",
         params={
             "ranges": {0: (-0.002, 0.002), 1: (-0.002, 0.002), 2: (-0.002, 0.002)},
