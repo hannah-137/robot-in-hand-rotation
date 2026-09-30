@@ -3,12 +3,13 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import torch
+import torch.nn.functional as F
 
 from mjlab.entity import Entity
 from mjlab.managers.reward_manager import RewardTermCfg
 from mjlab.managers.scene_entity_config import SceneEntityCfg
 from mjlab.sensor import ContactSensor
-from mjlab.utils.lab_api.math import euler_xyz_from_quat, wrap_to_pi
+from mjlab.utils.lab_api.math import euler_xyz_from_quat, quat_apply, wrap_to_pi
 
 if TYPE_CHECKING:
   from mjlab.envs import ManagerBasedRlEnv
@@ -61,6 +62,19 @@ class object_yaw_finite_diff_clipped:
   Optionally, the yaw reward is multiplied by a drift factor based on object
   translation and roll/pitch deviation from reset pose. This suppresses reward
   when the cube drifts via non-target motion.
+
+  ``drift_mode`` selects how the factor is computed:
+  - "step": inside_factor inside the thresholds, outside_factor outside.
+  - "exp": 1.0 inside the thresholds, exponential decay outside.
+  - "soft": decreases with pose error inside the thresholds, from
+    inside_factor at zero error to outside_factor at the threshold. Outside
+    the thresholds it equals outside_factor.
+
+  ``tilt_metric`` selects how the tilt error is measured:
+  - "euler": norm of the roll and pitch changes from the reset pose.
+  - "up_axis": angle between the reset up axis and the same body axis now.
+    The up axis is the body axis that points most upward at reset. Spinning
+    about this axis gives zero tilt error.
   """
 
   def __init__(self, cfg: RewardTermCfg, env: ManagerBasedRlEnv):
@@ -79,6 +93,20 @@ class object_yaw_finite_diff_clipped:
     self._init_roll = torch.zeros(env.num_envs, device=env.device)
     self._init_pitch = torch.zeros(env.num_envs, device=env.device)
     self._has_init = torch.zeros(env.num_envs, device=env.device, dtype=torch.bool)
+    quat = env.scene[self.object_name].data.root_link_quat_w
+    self._body_axes = quat.new_tensor(
+      [
+        [1.0, 0.0, 0.0],
+        [-1.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0],
+        [0.0, -1.0, 0.0],
+        [0.0, 0.0, 1.0],
+        [0.0, 0.0, -1.0],
+      ]
+    )
+    self._up_axis_b = quat.new_zeros((env.num_envs, 3))
+    self._up_axis_b[:, 2] = 1.0
+    self._init_up_w = self._up_axis_b.clone()
     self._env = env
     self.reset(None)
 
@@ -100,6 +128,19 @@ class object_yaw_finite_diff_clipped:
     self._init_pos_w[env_ids] = cube.data.root_link_pos_w[env_ids]
     self._init_roll[env_ids] = roll[env_ids]
     self._init_pitch[env_ids] = pitch[env_ids]
+    # Store the body axis that points most upward, and its world direction.
+    quat = cube.data.root_link_quat_w[env_ids]
+    m = quat.shape[0]
+    if m > 0:
+      axes_w = quat_apply(
+        quat.unsqueeze(1).expand(m, 6, 4),
+        self._body_axes.unsqueeze(0).expand(m, 6, 3),
+      )
+      best = axes_w[..., 2].argmax(dim=1)
+      self._up_axis_b[env_ids] = self._body_axes[best]
+      self._init_up_w[env_ids] = F.normalize(
+        axes_w[torch.arange(m, device=quat.device), best], dim=-1
+      )
     self._has_init[env_ids] = True
 
   def __call__(
@@ -118,6 +159,7 @@ class object_yaw_finite_diff_clipped:
     drift_decay_k_pos: float = 30.0,
     drift_decay_k_tilt: float = 3.0,
     drift_min_factor: float = 0.1,
+    tilt_metric: str = "euler",
   ) -> torch.Tensor:
     del object_name  # Bound in __init__ for consistency across calls.
     if history_steps is not None and history_steps != self.history_steps:
@@ -157,11 +199,24 @@ class object_yaw_finite_diff_clipped:
     pos_error = torch.linalg.vector_norm(
       cube.data.root_link_pos_w - self._init_pos_w, dim=-1
     )
-    roll_error = wrap_to_pi(roll - self._init_roll).abs()
-    pitch_error = wrap_to_pi(pitch - self._init_pitch).abs()
-    tilt_error = torch.linalg.vector_norm(
-      torch.stack([roll_error, pitch_error], dim=-1), dim=-1
-    )
+    if tilt_metric == "euler":
+      roll_error = wrap_to_pi(roll - self._init_roll).abs()
+      pitch_error = wrap_to_pi(pitch - self._init_pitch).abs()
+      tilt_error = torch.linalg.vector_norm(
+        torch.stack([roll_error, pitch_error], dim=-1), dim=-1
+      )
+    elif tilt_metric == "up_axis":
+      up_w = F.normalize(
+        quat_apply(cube.data.root_link_quat_w, self._up_axis_b), dim=-1
+      )
+      tilt_error = torch.acos(
+        (up_w * self._init_up_w).sum(dim=-1).clamp(-1.0, 1.0)
+      )
+    else:
+      raise ValueError(
+        f"Unknown tilt_metric '{tilt_metric}'. "
+        "Expected one of: 'euler', 'up_axis'."
+      )
 
     if drift_mode == "step":
       in_bounds = (pos_error <= drift_position_threshold) & (
@@ -179,9 +234,27 @@ class object_yaw_finite_diff_clipped:
         -drift_decay_k_pos * pos_excess - drift_decay_k_tilt * tilt_excess
       )
       drift_factor = torch.clamp(drift_factor, min=drift_min_factor, max=1.0)
+    elif drift_mode == "soft":
+      # Pose scores are 1 at zero error and 0 at the threshold, as in the
+      # rotation_progress metric. The factor is inside_factor at zero error
+      # and outside_factor at or beyond the threshold.
+      pos_score = torch.clamp(
+        1.0 - pos_error / max(drift_position_threshold, 1e-6),
+        min=0.0,
+        max=1.0,
+      )
+      tilt_score = torch.clamp(
+        1.0 - tilt_error / max(drift_tilt_threshold, 1e-6),
+        min=0.0,
+        max=1.0,
+      )
+      drift_factor = drift_outside_factor + (
+        drift_inside_factor - drift_outside_factor
+      ) * pos_score * tilt_score
     else:
       raise ValueError(
-        f"Unknown drift_mode '{drift_mode}'. Expected one of: 'step', 'exp'."
+        f"Unknown drift_mode '{drift_mode}'. "
+        "Expected one of: 'step', 'exp', 'soft'."
       )
 
     drift_factor = torch.where(
